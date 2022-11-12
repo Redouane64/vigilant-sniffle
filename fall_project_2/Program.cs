@@ -49,15 +49,15 @@ static string ReadPassword()
     var value = new List<char>();
     while (true)
     {
-        var key = Console.ReadKey(true).KeyChar;
+        var key = Console.ReadKey(true);
         Console.Write('*');
 
-        if (key == '\r' || Environment.NewLine.Contains(key))
+        if (key.Key == ConsoleKey.Enter)
         {
             break;
         }
 
-        value.Add(key);
+        value.Add(key.KeyChar);
     }
 
     return new String(value.ToArray());
