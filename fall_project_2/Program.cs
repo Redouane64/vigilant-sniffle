@@ -19,7 +19,7 @@ switch (Console.ReadLine())
         break;
 }
 
-static (String, String) CreateWallet()
+static (String currency, String amount) CreateWallet()
 {
     var currency = Console.ReadLine();
     var amount = Console.ReadLine();
@@ -27,18 +27,38 @@ static (String, String) CreateWallet()
     return (currency, amount);
 }
 
-static (String, String) Login()
+static (String email, String password) Login()
 {
     var email = Console.ReadLine();
-    var password = Console.ReadLine();
+    var password = ReadPassword();
     return (email, password);
 }
 
-static (String, String, String) Register()
+static (String name, String email, String password) Register()
 {
     var name = Console.ReadLine();
     var email = Console.ReadLine();
-    var password = Console.ReadLine();
+    var password = ReadPassword();
 
     return (name, email, password);
+}
+
+// Helper to read masked password
+static string ReadPassword()
+{
+    var value = new List<char>();
+    while (true)
+    {
+        var key = Console.ReadKey(true).KeyChar;
+        Console.Write('*');
+
+        if (key == '\r' || Environment.NewLine.Contains(key))
+        {
+            break;
+        }
+
+        value.Add(key);
+    }
+
+    return new String(value.ToArray());
 }
