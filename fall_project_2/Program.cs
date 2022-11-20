@@ -1,7 +1,10 @@
+using System.Text.RegularExpressions;
+
 internal class Program
 {
     static bool terminateProgram = false;
     static bool isAuthenticated = false;
+    static bool hasErrored = false;
 
     private static void Main(string[] args)
     {
@@ -14,15 +17,16 @@ internal class Program
             Console.WriteLine("[1] register");
             Console.WriteLine("[2] login");
             Console.WriteLine("[3] exit");
-            Console.Write($"{Environment.NewLine}Select an option: ");
+            Console.WriteLine();
+            Console.Write("Select an option: ");
 
             switch (Console.ReadLine())
             {
                 case "1":
 
+                    // green program loop
                     do
                     {
-                        // green program loop
 
                         try
                         {
@@ -36,14 +40,17 @@ internal class Program
                         }
                         catch (Exception exception)
                         {
-                            Console.Error.WriteLine("Unable to register");
+                            Console.Error.WriteLine($"Unable to register: {exception.Message}");
+                            Console.WriteLine();
+
+                            hasErrored = true;
                         }
 
-                        if (!isAuthenticated)
+
+                        if (!hasErrored && !isAuthenticated)
                         {
                             break;
                         }
-
 
                     } while (true);
 
@@ -61,15 +68,19 @@ internal class Program
                             // TODO: 2. move to logout/create/delete/wallet
 
                             isAuthenticated = true;
+                            hasErrored = false;
                             ShowMainMenu();
 
                         }
                         catch (Exception exception)
                         {
-                            Console.Error.WriteLine("Unable to login");
+                            Console.WriteLine($"Login failed: {exception.Message}");
+                            Console.WriteLine();
+
+                            hasErrored = true;
                         }
 
-                        if (!isAuthenticated)
+                        if (!hasErrored && !isAuthenticated)
                         {
                             break;
                         }
@@ -98,8 +109,18 @@ internal class Program
         {
             Console.Write("Please enter your email: ");
             var email = Console.ReadLine();
+            if (!Regex.IsMatch(email, "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"))
+            {
+                throw new Exception("Invalid email address");
+            }
+
             Console.Write("Please enter your password: ");
             var password = ReadPassword();
+            if (password.Length > 4)
+            {
+                throw new Exception("Password must be at least 4 characters length");
+            }
+
             return (email, password);
         }
 
@@ -107,8 +128,18 @@ internal class Program
         {
             Console.Write("Please enter your name: ");
             var name = Console.ReadLine();
+            if (!Regex.IsMatch(name, "[a-zA-Z]"))
+            {
+                throw new Exception("Invalid name");
+            }
+
             Console.Write("Please enter your email: ");
             var email = Console.ReadLine();
+            if (!Regex.IsMatch(email, "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"))
+            {
+                throw new Exception("Invalid email address");
+            }
+
             Console.Write("Please enter your password: ");
             var password = ReadPassword();
 
