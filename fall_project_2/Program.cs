@@ -4,7 +4,7 @@ Console.WriteLine("Choose an option");
 Console.WriteLine("[1] register");
 Console.WriteLine("[2] login");
 Console.WriteLine("[3] exit");
-Console.Write("\r\nSelect an option: ");
+Console.Write($"{Environment.NewLine}Select an option: ");
 
 switch (Console.ReadLine())
 {
