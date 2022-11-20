@@ -5,6 +5,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
+    <OutDir>$(SolutionDir)/build/$(Configuration)/$(TargetFramework)/</OutDir>
+    <PublishDir>$(SolutionDir)/release/$(Configuration)/$(TargetFramework)/</PublishDir>
   </PropertyGroup>
 
 </Project>
