@@ -5,6 +5,9 @@ namespace fall_project_2;
 
 public class Wallet
 {
+    public Wallet()
+    { }
+
     public Wallet(string name, Currency currency, Money amount)
     {
         Name = name;
@@ -12,13 +15,18 @@ public class Wallet
         Amount = amount;
     }
 
-    public string Name { get; }
+    public int Id { get; set; }
 
-    public Currency Currency { get; }
+    public string Name { get; set; }
 
-    public List<Operation> Operations { get; }
+    public Currency Currency { get; set; }
 
-    public Money Amount { get; }
+    public int UserId { get; set; }
+    public User User { get; set; }
+
+    public List<Operation> Operations { get; set; }
+
+    public Money Amount { get; set; }
 
     public void AddOperation(Operation operation)
     {
