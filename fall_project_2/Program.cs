@@ -21,7 +21,9 @@ switch (Console.ReadLine())
 
 static (String currency, String amount) CreateWallet()
 {
+    Console.Write("Please choose currency");
     var currency = Console.ReadLine();
+    Console.Write("Please enter your amount");
     var amount = Console.ReadLine();
 
     return (currency, amount);
@@ -29,15 +31,20 @@ static (String currency, String amount) CreateWallet()
 
 static (String email, String password) Login()
 {
+    Console.Write("Please enter your email");
     var email = Console.ReadLine();
+    Console.Write("Please enter your password");
     var password = ReadPassword();
     return (email, password);
 }
 
 static (String name, String email, String password) Register()
 {
+    Console.Write("Please enter your name");
     var name = Console.ReadLine();
+    Console.Write("Please enter your email");
     var email = Console.ReadLine();
+    Console.Write("Please enter your password");
     var password = ReadPassword();
 
     return (name, email, password);
@@ -61,4 +68,24 @@ static string ReadPassword()
     }
 
     return new String(value.ToArray());
+}
+
+static (String amount, String date, String category) AddOperation()
+{
+    Console.Write("Please enter your amount");
+    var amount = Console.ReadLine();
+    Console.Write("Please enter your date");
+    var date = Console.ReadLine();
+    Console.Write("Choose your category");
+    var category = Console.ReadLine();
+
+    return (amount, date, category);
+}
+
+static String ChooseWallet()
+{
+    Console.Write("Please enter your wallet name");
+    var name = Console.ReadLine();
+
+    return name;
 }
