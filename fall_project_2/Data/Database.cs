@@ -1,3 +1,4 @@
+namespace fall_project_2.Data;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -9,8 +10,6 @@ public class DatabaseContextFactory : IDesignTimeDbContextFactory<ApplicationDat
         var builder = new DbContextOptionsBuilder<ApplicationDataContext>()
             .UseSqlite("Data Source=./app.db");
 
-        var context = new ApplicationDataContext(builder.Options);
-
-        return context;
+        return new ApplicationDataContext(builder.Options);
     }
 }

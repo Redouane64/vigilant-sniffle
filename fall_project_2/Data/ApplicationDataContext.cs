@@ -1,6 +1,6 @@
-using System.Text.Json;
+namespace fall_project_2.Data;
 
-using fall_project_2;
+using System.Text.Json;
 
 using Microsoft.EntityFrameworkCore;
 /* using Microsoft.EntityFrameworkCore.Infrastructure; */
