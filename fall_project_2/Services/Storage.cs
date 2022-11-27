@@ -23,4 +23,8 @@ public class Storage
     {
         _context = context;
     }
+
+    public Task<User> CreateUser(string email, string password) { return null; }
+
+    public Task<User> Login(string email, string password) { return null; }
 }
