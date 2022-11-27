@@ -1,12 +1,11 @@
 ﻿using System;
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace fall_project_2.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class InitialDatabaseSchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,8 +15,9 @@ namespace fall_project_2.Migrations
                 {
                     id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    name = table.Column<string>(type: "TEXT", nullable: true),
-                    email = table.Column<string>(type: "TEXT", nullable: true)
+                    name = table.Column<string>(type: "TEXT", nullable: false),
+                    email = table.Column<string>(type: "TEXT", nullable: false),
+                    password_hash = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,7 +54,7 @@ namespace fall_project_2.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     wallet_id = table.Column<int>(type: "INTEGER", nullable: false),
                     date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    value = table.Column<string>(type: "TEXT", nullable: true),
+                    value = table.Column<string>(type: "TEXT", nullable: false),
                     operation_type = table.Column<string>(type: "TEXT", nullable: false),
                     expense_type = table.Column<string>(type: "TEXT", nullable: true),
                     income_type = table.Column<string>(type: "TEXT", nullable: true)

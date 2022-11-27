@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using fall_project_2.Data;
 
 #nullable disable
 
@@ -57,12 +58,19 @@ namespace fall_project_2.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("email");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("name");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("password_hash");
 
                     b.HasKey("Id");
 

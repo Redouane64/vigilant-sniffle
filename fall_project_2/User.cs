@@ -7,11 +7,13 @@ public class User
 {
     public int Id { get; set; }
 
-    public string Name { get; }
+    public string Name { get; set; }
 
-    public string Email { get; }
+    public string Email { get; set; }
 
-    public List<Wallet> Wallets { get; }
+    public string PasswordHash { get; set; }
+
+    public List<Wallet> Wallets { get; set; }
 
     public void AddWallet(Wallet wallet)
     {

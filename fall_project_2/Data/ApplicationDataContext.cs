@@ -21,8 +21,18 @@ public class ApplicationDataContext : DbContext
             .IsUnique();
 
         modelBuilder.Entity<User>().Property(u => u.Id).HasColumnName("id");
-        modelBuilder.Entity<User>().Property(u => u.Name).HasColumnName("name");
-        modelBuilder.Entity<User>().Property(u => u.Email).HasColumnName("email");
+        modelBuilder.Entity<User>()
+                    .Property(u => u.Name)
+                    .HasColumnName("name")
+                    .IsRequired();
+        modelBuilder.Entity<User>()
+                    .Property(u => u.Email)
+                    .HasColumnName("email")
+                    .IsRequired();
+        modelBuilder.Entity<User>()
+                    .Property(u => u.PasswordHash)
+                    .HasColumnName("password_hash")
+                    .IsRequired();
 
         modelBuilder.Entity<User>()
             .HasMany(u => u.Wallets)
