@@ -166,6 +166,12 @@ internal class Program
             return new string(value.ToArray());
         }
 
+        static string AskForPassword(string email)
+        {
+            Console.Write($"Enter ({email}) password: ");
+            return ReadPassword();
+        }
+
         static (string amount, string date, string category) AddOperation()
         {
             Console.Write("Please enter your amount: ");
