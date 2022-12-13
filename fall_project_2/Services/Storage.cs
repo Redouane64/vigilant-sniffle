@@ -25,7 +25,7 @@ public class Storage : IDisposable
         get => s_activeWallet ?? throw new InvalidOperationException("Active wallet is not set");
     }
 
-    public async Task<User> RegisterUser(string email, string password)
+    public async Task<User> RegisterUser(string name, string email, string password)
     {
 
         var hasher = MD5.Create();
@@ -35,7 +35,7 @@ public class Storage : IDisposable
         var user = new User()
         {
             Email = email,
-            Name = email, // TODO: do we need name?
+            Name = name,
             PasswordHash = passwordHash,
         };
 
