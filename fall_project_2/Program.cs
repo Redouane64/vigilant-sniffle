@@ -1,8 +1,9 @@
-﻿
 using System.Text.RegularExpressions;
 
 using fall_project_2;
-using fall_project_2.Data;
+using fall_project_2.Enums;
+
+using Storage = fall_project_2.Services.Storage;
 
 internal class Program
 {
@@ -10,7 +11,9 @@ internal class Program
     static bool isAuthenticated = false;
     static bool hasErrored = false;
 
-    private static void Main(string[] args)
+    private static Storage storage = new Storage();
+
+    private static async Task Main(string[] args)
     {
 
         do
@@ -35,12 +38,11 @@ internal class Program
                         try
                         {
                             var input = Register();
-                            // TODO: 1. create user object
-                            // TODO: 2. save user object to database
-                            // TODO: 3. move to logout/create/delete/wallet
+                            _ = await storage.RegisterUser(input.name, input.email, input.password);
 
+                            hasErrored = false;
                             isAuthenticated = true;
-                            ShowMainMenu();
+                            await ShowMainMenu();
                         }
                         catch (Exception exception)
                         {
@@ -68,12 +70,11 @@ internal class Program
                         try
                         {
                             var input = Login();
-                            // TODO: 1. verify user credentials
-                            // TODO: 2. move to logout/create/delete/wallet
+                            _ = await storage.Login(input.email, input.password);
 
                             isAuthenticated = true;
                             hasErrored = false;
-                            ShowMainMenu();
+                            await ShowMainMenu();
 
                         }
                         catch (Exception exception)
@@ -100,14 +101,16 @@ internal class Program
         } while (!terminateProgram);
     }
 
-    static (string currency, string amount) CreateWallet()
+    static (string name, string currency, string amount) CreateWallet()
     {
+        Console.Write("Enter wallet name: ");
+        var name = Console.ReadLine();
         Console.Write("Please choose currency: ");
         var currency = Console.ReadLine();
         Console.Write("Please enter your amount: ");
         var amount = Console.ReadLine();
 
-        return (currency, amount);
+        return (name, currency, amount);
     }
 
     static (string email, string password) Login()
@@ -197,7 +200,7 @@ internal class Program
         return name;
     }
 
-    static void ShowMainMenu()
+    static async Task ShowMainMenu()
     {
         Console.WriteLine("Choose an option");
         Console.WriteLine("[1] Create Wallet");
@@ -213,7 +216,7 @@ internal class Program
             {
                 // grey loop
                 case "1":
-                    Console.WriteLine("Create Wallet Menu Selected");
+                    await ShowCreateWallet();
 
                     break;
                 case "2":
@@ -237,7 +240,7 @@ internal class Program
         } while (isAuthenticated);
     }
 
-    static void ShowCreateWallet()
+    static async Task ShowCreateWallet()
     {
         hasErrored = false;
         do
