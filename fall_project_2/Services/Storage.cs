@@ -2,12 +2,15 @@ using System.Security.Cryptography;
 using System.Text;
 
 using fall_project_2.Data;
+using fall_project_2.Enums;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace fall_project_2.Services;
 
 public class Storage : IDisposable
 {
-    private static ApplicationDataContext _context = new DatabaseContextFactory().CreateDbContext(null);
+    private ApplicationDataContext _context = new DatabaseContextFactory().CreateDbContext(null);
 
     private static User s_activeUser = null;
     public static User ActiveUser
@@ -22,57 +25,105 @@ public class Storage : IDisposable
         get => s_activeWallet ?? throw new InvalidOperationException("Active wallet is not set");
     }
 
-    public Task<User> RegisterUser(string email, string password)
+    public async Task<User> RegisterUser(string email, string password)
     {
 
-        // TODO: 1. Hash password
         var hasher = MD5.Create();
         var passwordHash = Convert.ToBase64String((hasher.ComputeHash(Encoding.ASCII.GetBytes(password))));
         hasher.Dispose();
 
-        // TODO: 2. build user object
-        // TODO: 3. save user object to database
+        var user = new User()
+        {
+            Email = email,
+            Name = email, // TODO: do we need name?
+            PasswordHash = passwordHash,
+        };
 
-        return null;
+        this._context.Users.Add(user);
+        await _context.SaveChangesAsync();
+
+        SetActiveUser(user);
+
+        return user;
     }
 
-    public Task<User> Login(string email, string password)
+    public async Task<User> Login(string email, string password)
     {
-        // TODO: 1. Hash password
+        var user = await this._context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+
+        if (user is null)
+        {
+            throw new Exception($"User <{email}> does not exist.");
+        }
+
         var hasher = MD5.Create();
         var passwordHash = Convert.ToBase64String((hasher.ComputeHash(Encoding.ASCII.GetBytes(password))));
         hasher.Dispose();
 
-        // TODO: 2. fetch user by email
+        if (!user.PasswordHash.Equals(passwordHash, StringComparison.Ordinal))
+        {
+            throw new Exception("Invalid login credentials");
+        }
 
-        // TODO: 3. verify fetched user passwordHash field to match with passwordHash
+        SetActiveUser(user);
 
-        return null;
+        return user;
     }
 
-    public Task<Wallet[]> GetUserWallets(string userEmail) { return null; }
-
-    public Task SetActiveWallet(Wallet wallet) { return null; }
-
-    public Task CreateWallet()
+    public async Task<Wallet[]> GetUserWallets()
     {
-        // TODO: 1. create wallet object
-        // TODO: 2. save wallet object to database
-        // TODO: 3. set as active wallet
-        return null;
+        // Load dependent wallet entities if not loaded already.
+        await this._context.Entry(ActiveUser).Collection(u => u.Wallets).LoadAsync();
+        return ActiveUser.Wallets.ToArray();
     }
 
-    public Task DeleteWallet()
+    public async Task SetActiveWallet(Wallet wallet)
     {
-        // TODO: 1. delete active wallet
-
-        return null;
+        var wallets = await this.GetUserWallets();
+        s_activeWallet = wallets.FirstOrDefault(w => w.Id == wallet.Id);
     }
 
-    public Task AddOperation()
+    public /* async Task */ void SetActiveUser(User user)
     {
-        // ActiveWallet.Operations.Add();
-        return null;
+        s_activeUser = user;
+    }
+
+    public async Task CreateWallet(string name, Currency currency, Money amount)
+    {
+        var wallet = new Wallet(name, currency, amount);
+        wallet.User = ActiveUser;
+
+        this._context.Wallets.Add(wallet);
+        await this._context.SaveChangesAsync();
+
+        await this.SetActiveWallet(wallet);
+    }
+
+    public async Task DeleteWallet()
+    {
+        if (ActiveWallet is null)
+        {
+            return;
+        }
+
+        this._context.Remove(ActiveWallet);
+        await this._context.SaveChangesAsync();
+
+        s_activeWallet = null;
+    }
+
+    public async Task AddOperation(Operation operation)
+    {
+        if (ActiveWallet is null)
+        {
+            return;
+        }
+
+        ActiveWallet.Operations.Add(operation);
+        // Tell EF that a new item to operation collection is added so that the SaveChanges call
+        // perform the necessary update.
+        this._context.Entry(ActiveWallet).Collection(w => w.Operations).IsModified = true;
+        await this._context.SaveChangesAsync();
     }
 
     public void Dispose()
