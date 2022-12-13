@@ -249,10 +249,13 @@ internal class Program
             {
                 var input = CreateWallet();
 
-                // TODO: 1. create wallet object
-                // TODO: 2. save wallet object to database
+                // TODO: fix this
+                if (!Enum.TryParse(input.currency, true, out Currency currency))
+                {
+                    throw new ArgumentException("Invalid currency selected");
+                }
 
-                // TODO: 3. return to orange
+                await storage.CreateWallet(input.name, currency, new Money(input.amount, currency));
             }
             catch (Exception exception)
             {
