@@ -11,7 +11,7 @@ internal class Program
     static bool isAuthenticated = false;
     static bool hasErrored = false;
 
-    private static Storage storage = new Storage();
+    private static readonly Storage storage = new Storage();
 
     private static async Task Main(string[] args)
     {
